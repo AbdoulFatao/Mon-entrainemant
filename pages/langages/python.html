@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Règles d'éco-conception pour Python - Optimisations environnementales"
+    >
+    <meta
+        name="keywords"
+        content="Python, écoconception, optimisation, performance, empreinte carbone, green coding"
+    >
+    <meta name="author" content="COURDIER Rémy, ROCHAT Lise, ONIAN Youssouf">
+
+    <title>Python - Éco-conception & Optimisations</title>
+
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../../assets/styles/styles.css">
+    <link rel="stylesheet" href="../../assets/styles/print.css" media="print">
+
+    <script defer src="../../assets/scripts/scripts-tp.js"></script>
+
+    <style>
+        .code-block {
+            background-color: #2d2d2d;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block.bad {
+            border-left-color: var(--emergency-color);
+            background-color: rgba(253, 99, 99, 0.1);
+        }
+
+        .code-block.good {
+            border-left-color: var(--success-color);
+            background-color: rgba(105, 240, 109, 0.1);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #e8e8e8;
+            white-space: pre-wrap;
+        }
+
+        .code-block code {
+            color: #e8e8e8;
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .variable {
+            color: #9cdcfe;
+        }
+
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .operator {
+            color: #d4d4d4;
+        }
+
+        .nav-languages {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-languages a {
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .nav-languages a:hover {
+            background-color: rgba(47, 223, 173, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .nav-languages a.active {
+            background-color: #FFD43B;
+            color: white;
+            border-color: #aaa;
+        }
+
+        .metrics-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .metrics-card {
+            padding: 10px;
+            background: rgba(47, 223, 173, 0.1);
+            border-radius: 8px;
+        }
+
+        .eco-rule {
+            margin: 20px 0;
+            background: linear-gradient(
+                135deg,
+                rgba(47, 223, 173, 0.05) 0%,
+                rgba(47, 223, 173, 0.01) 100%
+            );
+            border-radius: 10px;
+            border: 1px solid rgba(47, 223, 173, 0.3);
+            overflow: hidden;
+        }
+
+        .rule-header {
+            width: 100%;
+            border: none;
+            padding: 20px 25px;
+            cursor: pointer;
+            background: transparent;
+            color: inherit;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .rule-header:hover {
+            background-color: rgba(47, 223, 173, 0.1);
+        }
+
+        .rule-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .rule-number {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .rule-title-section {
+            flex: 1;
+        }
+
+        .rule-title {
+            display: block;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+        }
+
+        .rule-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .rule-metrics {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .metric-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-color-light);
+            margin-top: 2px;
+        }
+
+        .impact-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .impact-high {
+            background-color: var(--success-color);
+            color: var(--background-color);
+        }
+
+        .impact-medium {
+            background-color: var(--warning-color);
+            color: var(--background-color);
+        }
+
+        .impact-low {
+            background-color: var(--warning-color);
+            color: var(--background-color);
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .eco-rule.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .rule-content {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 25px;
+            transition:
+                max-height 0.4s ease,
+                padding 0.4s ease;
+        }
+
+        .eco-rule.active .rule-content {
+            padding: 0 25px 25px 25px;
+        }
+
+        .explanation-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--info-color);
+        }
+
+        .gain-box {
+            background-color: rgba(105, 240, 109, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--success-color);
+        }
+
+        .gain-table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .gain-table th,
+        .gain-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gain-table thead {
+            background-color: rgba(105, 240, 109, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .rule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rule-metrics {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .rule-title {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="../langages.html" class="back-link">
+            <span class="back-arrow">🠔</span>
+            <span class="back-text">Retour</span>
+        </a>
+
+        <button class="hamburger" id="hamburger-menu" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+<nav id="navbar">
+            <ul>
+                <li class="mg-0"><a href="../../index.html">Home</a></li>
+                <li class="mg-0"><a href="../quelques-chiffres.html">Chiffres</a></li>
+                <li class="mg-0"><a href="../quizz-access.html">Quiz</a></li>
+                <li class="mg-0"><a href="../en-pratique.html">Ateliers</a></li>
+                <li class="mg-0"><a href="../outils.html">Outils</a></li>
+                <li class="mg-0"><a href="../langages.html" class="active">Langages</a></li>
+                <li class="mg-0"><a href="../ressources.html">Ressources</a></li>
+                <li class="mg-0"><a href="../terminologie.html">Terminologie</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main">
+        <h1><i class="fab fa-python"></i> Python - Éco-conception & Green Coding</h1>
+
+        <div class="nav-languages">
+            <a href="./php.html"><i class="fab fa-php"></i> PHP</a>
+            <a href="./rust.html"><i class="fab fa-rust"></i> Rust</a>
+            <a href="python.html" class="active"><i class="fab fa-python"></i> Python</a>
+            <a href="c.html"><i class="fas fa-code"></i> C/C++</a>
+            <a href="java.html"><i class="fab fa-java"></i> Java</a>
+            <a href="dart.html"><i class="fas fa-cog"></i> Dart</a>
+            <a href="javascript.html"><i class="fab fa-js"></i> JavaScript</a>
+        </div>
+
+        <section class="intro-text">
+            <p>
+                Python est un langage de programmation <strong>interprété</strong>, polyvalent
+                et largement utilisé dans de nombreux domaines. Sa <strong>simplicité de syntaxe</strong>
+                permet de développer rapidement, mais peut aussi conduire à des pratiques coûteuses
+                en ressources.
+            </p>
+
+            <br>
+
+            <p>
+                Cette page présente <strong>10 règles d'éco-conception</strong> concrètes pour réduire
+                l'empreinte carbone des applications Python, à partir de mesures réalisées avec
+                CodeCarbon et d'exemples faciles à comprendre.
+            </p>
+        </section>
+
+        <section class="metrics-section">
+            <h3><i class="fas fa-info-circle"></i> Métriques de référence Green IT</h3>
+
+            <div class="metrics-grid">
+                <div class="metrics-card">
+                    <strong>1 km voiture thermique</strong><br>
+                    112 g eq CO₂
+                </div>
+
+                <div class="metrics-card">
+                    <strong>Empreinte numérique française</strong><br>
+                    420 kg eq CO₂ / an / personne
+                </div>
+
+                <div class="metrics-card">
+                    <strong>Énergie primaire</strong><br>
+                    1 800 kWh = fabrication de 32 téléphones
+                </div>
+
+                <div class="metrics-card">
+                    <strong>Consommation d'eau numérique</strong><br>
+                    1 900 L / an
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 60px;">
+            <h2 style="text-align: center; font-size: 2rem; color: var(--primary-color); margin-bottom: 40px;">
+                <i class="fas fa-leaf"></i> Exemple de 10 Éco-Rules Python
+            </h2>
+
+            <article class="eco-rule" id="rule1">
+                <button class="rule-header" type="button" onclick="toggleRule('rule1')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">1</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Set vs List pour la recherche</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#structures-de-donnees</span>
+                                <span class="tag">#algorithmique</span>
+                                <span class="tag">#cpu</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">97.0%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">2 207×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule2">
+                <button class="rule-header" type="button" onclick="toggleRule('rule2')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">2</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Générateurs pour flux massifs</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#streaming</span>
+                                <span class="tag">#scalabilite</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">100.0%</span>
+                            <span class="metric-label">Gain mémoire</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">41.1%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule3">
+                <button class="rule-header" type="button" onclick="toggleRule('rule3')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">3</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">NumPy pour le calcul numérique</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#calcul-numerique</span>
+                                <span class="tag">#vectorisation</span>
+                                <span class="tag">#ml</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">97.0%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">594×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule4">
+                <button class="rule-header" type="button" onclick="toggleRule('rule4')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">4</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Concaténation de chaînes optimisée</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#strings</span>
+                                <span class="tag">#web</span>
+                                <span class="tag">#json</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">93.9%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">58.3×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule5">
+                <button class="rule-header" type="button" onclick="toggleRule('rule5')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">5</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Bufferisation I/O</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#io</span>
+                                <span class="tag">#disque</span>
+                                <span class="tag">#fichiers</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">98.4%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">235.3×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule6">
+                <button class="rule-header" type="button" onclick="toggleRule('rule6')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">6</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Parallélisme adapté avec multiprocessing</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#concurrence</span>
+                                <span class="tag">#cpu</span>
+                                <span class="tag">#gil</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">52.5%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">2.5×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule7">
+                <button class="rule-header" type="button" onclick="toggleRule('rule7')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">7</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">deque pour les files FIFO</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#structures-de-donnees</span>
+                                <span class="tag">#queue</span>
+                                <span class="tag">#algorithmique</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">79.3%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">23.6×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule8">
+                <button class="rule-header" type="button" onclick="toggleRule('rule8')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">8</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Mémoïsation avec lru_cache</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#cache</span>
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#algorithmes</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">97.9%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">204 872×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule9">
+                <button class="rule-header" type="button" onclick="toggleRule('rule9')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">9</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Court-circuitage avec any() / all()</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#algorithmique</span>
+                                <span class="tag">#validation</span>
+                                <span class="tag">#logique</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">98.6%</span>
+                            <span class="metric-label">Gain CO₂</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">2.7 M×</span>
+                            <span class="metric-label">Plus rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule10">
+                <button class="rule-header" type="button" onclick="toggleRule('rule10')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">10</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Bonnes pratiques de base & PEP8</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#pep8</span>
+                                <span class="tag">#ruff</span>
+                                <span class="tag">#fiabilite</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">~15%</span>
+                            <span class="metric-label">Gain potentiel</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">⭐⭐⭐</span>
+                            <span class="metric-label">Impact</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+        </section>
+
+        <!-- Bibliographie -->
+        <section class="bibliography" style="margin-top: 60px;">
+            <h2>
+                Bibliographie & Références
+            </h2>
+
+            <ul class="bibliography-list" style="text-align: left; max-width: 900px; margin: 0 auto;">
+                <li id="source-codecarbon">
+                    <strong>[1]</strong>
+                    CodeCarbon.
+                    <em>Machine Learning CO2 Impact Estimator</em>.
+                    <a href="https://codecarbon.io/" target="_blank">
+                        [Site officiel]
+                    </a>
+                    <a href="https://github.com/mlco2/codecarbon" target="_blank">
+                        [GitHub]
+                    </a>
+                </li>
+
+                <li id="source-ademe">
+                    <strong>[2]</strong>
+                    ADEME.
+                    <em>Base Carbone - Facteurs d'émissions</em>.
+                    <a href="https://bilans-ges.ademe.fr/" target="_blank">
+                        [Base Carbone]
+                    </a>
+                </li>
+
+                <li id="source-greenit">
+                    <strong>[3]</strong>
+                    GreenIT.fr.
+                    <em>Impacts environnementaux du numérique en France</em>.
+                    Version 0.8 - Janvier 2021.
+                    <a href="https://www.greenit.fr/" target="_blank">
+                        [GreenIT.fr]
+                    </a>
+                </li>
+
+                <li id="source-python-perf">
+                    <strong>[4]</strong>
+                    Python Software Foundation.
+                    <em>Performance Tips - Official Documentation</em>.
+                    <a href="https://wiki.python.org/moin/PythonSpeed/PerformanceTips" target="_blank">
+                        [Python Wiki]
+                    </a>
+                </li>
+
+                <li id="source-numpy">
+                    <strong>[5]</strong>
+                    Harris, C. R., et al. (2020).
+                    <em>Array programming with NumPy</em>.
+                    Nature, 585(7825), 357-362.
+                    <a href="https://www.nature.com/articles/s41586-020-2649-2" target="_blank">
+                        [Nature]
+                    </a>
+                </li>
+
+                <li id="source-generators">
+                    <strong>[6]</strong>
+                    Van Rossum, G., & Drake, F. L. (2011).
+                    <em>The Python Language Reference Manual</em>
+                    - Generators.
+                    <a href="https://docs.python.org/3/reference/expressions.html#generator-expressions" target="_blank">
+                        [Python Docs]
+                    </a>
+                </li>
+
+                <li id="source-multiprocessing">
+                    <strong>[7]</strong>
+                    Python Documentation.
+                    <em>multiprocessing — Process-based parallelism</em>.
+                    <a href="https://docs.python.org/3/library/multiprocessing.html" target="_blank">
+                        [Docs]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[8]</strong>
+                    Python Documentation.
+                    <em>collections — deque objects</em>.
+                    <a href="https://docs.python.org/3/library/collections.html#collections.deque" target="_blank">
+                        [Docs]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[9]</strong>
+                    Python Documentation.
+                    <em>functools — lru_cache decorator</em>.
+                    <a href="https://docs.python.org/3/library/functools.html#functools.lru_cache" target="_blank">
+                        [Docs]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[10]</strong>
+                    Lannelongue, L., Grealey, J., & Inouye, M. (2021).
+                    <em>Green Algorithms: Quantifying the Carbon Footprint of Computation</em>.
+                    Advanced Science, 8(12).
+                    <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/advs.202100707" target="_blank">
+                        [Paper]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[11]</strong>
+                    CodeCarbon.
+                    <em>Global Energy Mix by Country</em>.
+                    <a href="https://github.com/mlco2/codecarbon/blob/master/codecarbon/data/private_infra/global_energy_mix.json" target="_blank">
+                        [JSON Data]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[12]</strong>
+                    Ramalho, L. (2022).
+                    <em>Fluent Python: Clear, Concise, and Effective Programming</em>
+                    (2nd ed.). O'Reilly Media.
+                </li>
+
+                <li>
+                    <strong>[13]</strong>
+                    Slatkin, B. (2019).
+                    <em>Effective Python: 125 Specific Ways to Write Better Python</em>
+                    (2nd ed.). Addison-Wesley.
+                </li>
+
+                <li>
+                    <strong>[14]</strong>
+                    PEP 8.
+                    <em>Style Guide for Python Code</em>.
+                    <a href="https://peps.python.org/pep-0008/" target="_blank">
+                        [PEP 8]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[15]</strong>
+                    Astral.
+                    <em>Ruff - An extremely fast Python linter and code formatter, written in Rust</em>.
+                    <a href="https://docs.astral.sh/ruff/" target="_blank">
+                        [Documentation]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[16]</strong>
+                    Łukasz Langa.
+                    <em>Black - The uncompromising Python code formatter</em>.
+                    <a href="https://black.readthedocs.io/" target="_blank">
+                        [Documentation]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[17]</strong>
+                    Google.
+                    <em>Google Python Style Guide</em>.
+                    <a href="https://google.github.io/styleguide/pyguide.html" target="_blank">
+                        [Style Guide]
+                    </a>
+                </li>
+
+                <li>
+                    <strong>[18]</strong>
+                    PEP 498.
+                    <em>Literal String Interpolation (f-strings)</em>.
+                    <a href="https://peps.python.org/pep-0498/" target="_blank">
+                        [PEP 498]
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <div
+            class="button-container"
+            style="
+                margin-top: 60px;
+                gap: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            "
+        >
+            <a href="../langages.html" class="button">
+                <i class="fas fa-arrow-left"></i> Retour aux langages
+            </a>
+
+            <a href="../../index.html" class="button" style="background-color: var(--info-color);">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+
+            <a href="../en-pratique.html" class="button" style="background-color: var(--success-color);">
+                <i class="fas fa-code"></i> Ateliers pratiques
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p class="mg-0">
+            &copy; 2026 - COURDIER Rémy & Étudiants d'informatique de l'Université de La Réunion -
+            <a href="./a-propos.html">À propos</a>
+        </p>
+    </footer>
+
+    <script>
+        const ruleContents = {
+            rule1: `
+                <p><strong>Cas d'usage :</strong> Recherche fréquente dans une collection, permissions, identifiants, référentiels.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Utiliser <code>set</code> ou <code>dict</code> pour les recherches fréquentes,
+                        plutôt qu'une <code>list</code>.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="comment"># Recherche linéaire O(n)</span>
+items_list = list(range(1_000_000))
+target = 999_999
+found = target in items_list</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="comment"># Recherche par hachage O(1)</span>
+items_set = set(range(1_000_000))
+found = target in items_set</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Liste</th>
+                                <th>Set</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>38.967 s</td>
+                                <td>0.018 s</td>
+                                <td><strong>2 207×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0323 g</td>
+                                <td>0.0010 g</td>
+                                <td><strong>97.0%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule2: `
+                <p><strong>Cas d'usage :</strong> Gros fichiers logs, CSV volumineux, traitement en streaming.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Les générateurs traitent les éléments au fur et à mesure,
+                        sans charger tout le contenu en mémoire.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>lignes = list(lire_flux_donnees())
+resultats = [transformer(ligne) for ligne in lignes]
+total = sum(len(r) for r in resultats)</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>total = sum(
+    len(transformer(ligne))
+    for ligne in lire_flux_donnees()
+)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Liste</th>
+                                <th>Générateur</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mémoire</td>
+                                <td>2 307 Mo</td>
+                                <td>0.3 Mo</td>
+                                <td><strong>100%</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0478 g</td>
+                                <td>0.0282 g</td>
+                                <td><strong>41.1%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule3: `
+                <p><strong>Cas d'usage :</strong> Calcul scientifique, data science, machine learning, traitement d'images.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        NumPy exécute les opérations numériques en C sur des tableaux contigus,
+                        ce qui réduit fortement l'overhead Python.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>numbers = [float(i) for i in range(10_000_000)]
+result = sum([x ** 2 for x in numbers])</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>import numpy as np
+
+numbers = np.arange(10_000_000, dtype=np.float64)
+result = np.sum(numbers ** 2)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Python pur</th>
+                                <th>NumPy</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>32.949 s</td>
+                                <td>0.055 s</td>
+                                <td><strong>594×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0344 g</td>
+                                <td>0.0010 g</td>
+                                <td><strong>97.0%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule4: `
+                <p><strong>Cas d'usage :</strong> Génération HTML, JSON, logs, rapports.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Construire de grandes chaînes avec <code>join()</code>
+                        plutôt qu'avec <code>+=</code> dans une boucle.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>html = ""
+
+for item in elements:
+    html += f"&lt;div&gt;{item}&lt;/div&gt;"</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>html = "".join(
+    f"&lt;div&gt;{item}&lt;/div&gt;"
+    for item in elements
+)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>+=</th>
+                                <th>join()</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>37.770 s</td>
+                                <td>0.648 s</td>
+                                <td><strong>58.3×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0348 g</td>
+                                <td>0.0021 g</td>
+                                <td><strong>93.9%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule5: `
+                <p><strong>Cas d'usage :</strong> Lecture et copie de fichiers volumineux.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Lire et écrire par blocs plutôt qu'octet par octet.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>while True:
+    octet = f_in.read(1)
+
+    if not octet:
+        break
+
+    f_out.write(octet)</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>BUFFER_SIZE = 64 * 1024
+
+while True:
+    bloc = f_in.read(BUFFER_SIZE)
+
+    if not bloc:
+        break
+
+    f_out.write(bloc)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>1 octet</th>
+                                <th>64 KB</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>150.701 s</td>
+                                <td>0.640 s</td>
+                                <td><strong>235.3×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.1346 g</td>
+                                <td>0.0021 g</td>
+                                <td><strong>98.4%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule6: `
+                <p><strong>Cas d'usage :</strong> Calculs CPU intensifs, traitement parallèle, rendu, parsing lourd.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Utiliser <code>multiprocessing</code> pour les tâches CPU-bound
+                        plutôt que <code>threading</code>.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>import threading
+
+threads = []
+
+for part in parts:
+    thread = threading.Thread(
+        target=tache_cpu,
+        args=(part,)
+    )
+    thread.start()
+    threads.append(thread)</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>import multiprocessing as mp
+
+with mp.Pool(processes=NUM_WORKERS) as pool:
+    resultats = pool.map(tache_cpu, parts)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Threading</th>
+                                <th>Multiprocessing</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>10.729 s</td>
+                                <td>4.351 s</td>
+                                <td><strong>2.5×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0170 g</td>
+                                <td>0.0081 g</td>
+                                <td><strong>52.5%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule7: `
+                <p><strong>Cas d'usage :</strong> Files d'attente, BFS, scheduling, buffers circulaires.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Utiliser <code>collections.deque</code> plutôt qu'une liste
+                        pour retirer rapidement en début de collection.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>file_liste = list(range(500_000))
+
+while file_liste:
+    item = file_liste.pop(0)
+    transformer(item)</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>from collections import deque
+
+file_deque = deque(range(500_000))
+
+while file_deque:
+    item = file_deque.popleft()
+    transformer(item)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>list.pop(0)</th>
+                                <th>deque.popleft()</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>31.804 s</td>
+                                <td>1.349 s</td>
+                                <td><strong>23.6×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0300 g</td>
+                                <td>0.0062 g</td>
+                                <td><strong>79.3%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule8: `
+                <p><strong>Cas d'usage :</strong> Fonctions récursives, calculs répétés, réponses d'API coûteuses.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Mémoriser les résultats avec <code>@lru_cache</code>
+                        pour éviter des recalculs inutiles.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>def fibonacci_lent(n):
+    if n &lt; 2:
+        return n
+
+    return fibonacci_lent(n - 1) + fibonacci_lent(n - 2)</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def fibonacci_rapide(n):
+    if n &lt; 2:
+        return n
+
+    return fibonacci_rapide(n - 1) + fibonacci_rapide(n - 2)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Sans cache</th>
+                                <th>Avec cache</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>49.650 s</td>
+                                <td>0.000242 s</td>
+                                <td><strong>204 872×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>CO₂</td>
+                                <td>0.0447 g</td>
+                                <td>0.0009 g</td>
+                                <td><strong>97.9%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule9: `
+                <p><strong>Cas d'usage :</strong> Validation de données, recherche d'erreurs, tests de propriétés.</p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Principe</h4>
+                    <p>
+                        Utiliser un générateur dans <code>any()</code> ou <code>all()</code>
+                        pour s'arrêter dès que le résultat est connu.
+                    </p>
+                </div>
+
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Anti-pattern :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code>resultat = any([
+    est_invalide(x)
+    for x in donnees
+])</code></pre>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Solution :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>resultat = any(
+    est_invalide(x)
+    for x in donnees
+)</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Résultats mesurés :</h4>
+                    <table class="gain-table">
+                        <thead>
+                            <tr>
+                                <th>Métrique</th>
+                                <th>Liste</th>
+                                <th>Générateur</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Temps</td>
+                                <td>79.535 s</td>
+                                <td>0.000029 s</td>
+                                <td><strong>2.7 M×</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Mémoire</td>
+                                <td>392.99 Mo</td>
+                                <td>0.33 Mo</td>
+                                <td><strong>99.9%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `,
+
+            rule10: `
+                <p>
+                    Cette règle regroupe plusieurs bonnes pratiques de base pour produire
+                    un code Python plus lisible, plus maintenable et souvent plus sobre.
+                </p>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-lightbulb"></i> Exemples de bonnes pratiques</h4>
+                    <ul>
+                        <li>Utiliser les variables locales dans les boucles critiques.</li>
+                        <li>Placer les imports au niveau du module.</li>
+                        <li>Préférer <code>with</code> pour fermer proprement les ressources.</li>
+                        <li>Utiliser les list comprehensions quand elles améliorent la clarté.</li>
+                        <li>Employer les f-strings pour le formatage.</li>
+                        <li>Respecter PEP8 et utiliser Ruff / Black.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Exemple simple :
+                </h4>
+
+                <div class="code-block good">
+<pre><code>import math
+
+def process_data(data):
+    sqrt = math.sqrt
+    return [sqrt(value) for value in data]</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Bénéfices :</h4>
+                    <ul>
+                        <li>Code plus clair.</li>
+                        <li>Moins d'erreurs et de fuites de ressources.</li>
+                        <li>Des gains cumulés sur les traitements répétés.</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function closeRule(rule) {
+            const content = rule.querySelector('.rule-content');
+
+            rule.classList.remove('active');
+            content.style.maxHeight = '0px';
+            content.innerHTML = '';
+            content.dataset.loaded = 'false';
+        }
+
+        function activateRule(rule, shouldScroll) {
+            const content = rule.querySelector('.rule-content');
+            const ruleId = rule.id;
+
+            document.querySelectorAll('.eco-rule.active').forEach(openRuleCard => {
+                if (openRuleCard !== rule) {
+                    closeRule(openRuleCard);
+                }
+            });
+
+            if (content.dataset.loaded !== 'true') {
+                content.innerHTML = ruleContents[ruleId] || '';
+                content.dataset.loaded = 'true';
+            }
+
+            rule.classList.add('active');
+
+            requestAnimationFrame(() => {
+                content.style.maxHeight = content.scrollHeight + 'px';
+
+                if (shouldScroll) {
+                    rule.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        function toggleRule(ruleId) {
+            const rule = document.getElementById(ruleId);
+
+            if (!rule) {
+                return;
+            }
+
+            if (rule.classList.contains('active')) {
+                closeRule(rule);
+            } else {
+                activateRule(rule, false);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.eco-rule.active').forEach(rule => {
+                const content = rule.querySelector('.rule-content');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+
+</html>

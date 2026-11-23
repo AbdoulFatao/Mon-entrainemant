@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Impact environnemental d'Instagram">
+    <meta name="keywords" content="écoconception, Instagram, empreinte carbone, réseaux sociaux, environnement">
+    <meta name="author" content="Xitra Lucas">
+    <meta name="expires" content="Thu, 31 Dec 2024 23:59:59 GMT">
+    <title>Instagram - Écoconception Numérique</title>
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/styles/styles.css">
+    <link rel="stylesheet" href="../../assets/styles/print.css" media="print">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="../../assets/scripts/hamburger.js"></script>
+</head>
+
+<body>
+    <header>
+        <a href="../quelques-chiffres.html" class="back-link">
+            <span class="back-arrow">🠔</span>
+            <span class="back-text">Retour</span>
+        </a>
+
+        <button class="hamburger" id="hamburger-menu" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+<nav id="navbar">
+            <ul>
+                <li class="mg-0"><a href="../../index.html">Home</a></li>
+                <li class="mg-0"><a href="../quelques-chiffres.html" class="active">Chiffres</a></li>
+                <li class="mg-0"><a href="../quizz-access.html">Quiz</a></li>
+                <li class="mg-0"><a href="../en-pratique.html">Ateliers</a></li>
+                <li class="mg-0"><a href="../outils.html">Outils</a></li>
+                <li class="mg-0"><a href="../langages.html">Langages</a></li>
+                <li class="mg-0"><a href="../ressources.html">Ressources</a></li>
+                <li class="mg-0"><a href="../terminologie.html">Terminologie</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="main">
+        <h1>Impact Environnemental d'Instagram</h1>
+        <section class="services-container">
+            <section class="intro-text">
+                <p>Instagram est une plateforme de réseaux sociaux très populaire, mais elle contribue également à l'empreinte environnementale numérique. Cette fiche examine l'impact carbone d'une heure d'utilisation d'Instagram par rapport à d'autres activités numériques courantes.</p>
+            </section>
+            <section class="stats-icons">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <h2>2+ Milliards</h2>
+                    <p>Utilisateurs actifs mensuels <sup><a href="#source1">[1]</a></sup></p>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-photo-video"></i>
+                    <h2>95+ Millions</h2>
+                    <p>Photos et vidéos publiées chaque jour <sup><a href="#source1">[1]</a></sup></p>
+                </div>
+                <div class="stat-item-container">
+                    <div class="stat-item" id="stat-item-base">
+                        <i class="fas fa-leaf"></i>
+                        <h2>52g CO2</h2>
+                        <p>Émission de CO2 par heure d'utilisation<sup><a href="#source2">[2]</a></sup></p>
+                    </div>
+                    <div class="stat-item" id="stat-item-hover">
+                        <i class="fa-solid fa-car"></i>
+                        <h2>260 m</h2>
+                        <p>Équivalent carbone (distance en voiture) selon impact CO2<sup><a href="#source2">[2]</a></sup></p>
+                    </div>
+                </div>
+            </section>
+            <section class="impact-details">
+                <h2>Comparaison de l'empreinte carbone <sup><a href="#source2">[2]</a></sup></h2>
+                <p>Une heure passée sur Instagram génère environ 52 g de CO2. Ce chiffre peut sembler faible, mais il s'additionne rapidement avec des millions d'utilisateurs actifs chaque jour, représentant une empreinte environnementale significative.</p>
+
+                <div class="chart-container" style="display: flex; justify-content: center; max-width: 100%; position: relative; height: 400px;">
+                    <canvas id="co2Chart"></canvas>
+                </div>
+            </section>
+            <section class="additional-impact">
+                <h2>Autres impacts environnementaux <sup><a href="#source3">[3]</a></sup></h2>
+                <section class="additional-impact-content">
+                    <div class="impact-card impact-card-1">
+                        <p class="impact-value">0,12 Litres /min</p>
+                        <p class="impact-label">Ressource en Eau</p>
+                    </div>
+                    <div class="impact-card impact-card-2">
+                        <p class="impact-value">1,03 m² /min</p>
+                        <p class="impact-label">Occupation des sols</p>
+                    </div>
+                    <div class="impact-card impact-card-3">
+                        <p class="impact-value">8,9 mAh /min</p>
+                        <p class="impact-label">Consommation d'énergie</p>
+                    </div>
+                </section>
+
+                <!-- Personnalisation selon l'usage -->
+                <details class ="personnalize" aria-labelledby="usage-title">
+                    <summary>Personnaliser selon votre usage</summary>
+
+                    <div class="usage-input">
+                        <label for="dailyMinutes">Temps d’usage quotidien (en minutes) :</label>
+                        <input id="dailyMinutes" type="number" min="0" max="600" value="60" inputmode="numeric">
+                    </div>
+
+                    <div class="usage-results" role="status" aria-live="polite">
+                        <div class="usage-card red">
+                        <p class="usage-label">Eau</p>
+                        <p class="usage-line"><strong id="waterDay">-</strong> / jour</p>
+                        </div>
+
+                        <div class="usage-card yellow">
+                        <p class="usage-label">Occupation des sols</p>
+                        <p class="usage-line"><strong id="landDay">-</strong> / jour</p>
+                        </div>
+
+                        <div class="usage-card green">
+                        <p class="usage-label">Énergie</p>
+                        <p class="usage-line"><strong id="energyDay">-</strong> / jour</p>
+                        </div>
+                    </div>
+
+                    <section class="meaning">
+                        <h4>Ça veut dire quoi concètement ?</h4>
+                        <p>
+                            Pour être plus clair et donner un ordre de grandeur, une bouteille d’eau contient environ 1.5L, 
+                            une batterie de smartphone est souvent autour de 4 500 mAh et l’occupation des sols représente la surface mobilisée par les infrastructures numériques.
+                        </p>
+                        <p>
+                            Ainsi, <strong>1 heure</strong> quotidienne sur Instagram correspond à environ <strong>5 bouteilles d’eau</strong> consommées, à <strong>une soixantaine de mètres carrés</strong> d’infrastructures mobilisées, 
+                            ainsi qu’à une consommation d’énergie équivalente à <strong>environ 12%</strong> de batterie d'un smartphone.
+                        </p>
+                    </section>
+                </details>
+            </section>
+            <section class="tips">
+                <h2>Conseils pour réduire l'empreinte carbone</h2>
+                <section class="additional-impact-content">
+                    <div class="tip-item">
+                        <p>Réduisez le temps passé sur Instagram lorsque ce n'est pas nécessaire.</p>
+                    </div>
+                    <div class="tip-item">
+                        <p>Privilégiez le visionnage en basse définition pour limiter la consommation de données.</p>
+                    </div>
+                    <div class="tip-item">
+                        <p>Désactivez le chargement automatique des vidéos.</p>
+                    </div>
+                </section>
+            </section>
+        </section>
+        <section class="bibliography">
+            <h2>Sources</h2>
+            <ul class="bibliography-list">
+                <li id="source1">[1] "Chiffres Instagram - 2025," Blog du modérateur. Disponible en ligne : <a href="https://www.blogdumoderateur.com/chiffres-instagram/" target="_blank">https://www.blogdumoderateur.com/</a></li>
+                <li id="source2">[2] "Quelle empreinte environnementale pour les applications réseaux sociaux ? Édition 2023 ," Greenspector. Disponible en ligne : <a href="https://greenspector.com/fr/quelle-empreinte-environnementale-pour-les-applications-reseaux-sociaux-edition-2023/" target="_blank">https://greenspector.com/</a></li>
+                <li id="source3">[3] "Quelle empreinte environnementale pour les applications réseaux sociaux ? Édition 2021," Greenspector, Disponible en ligne : <a href="https://greenspector.com/fr/reseaux-sociaux-2021/" target="_blank">https://greenspector.com/</a></li>
+            </ul>
+        </section>
+        <div class="button-container">
+            <button class="button" onclick="window.print()" title="Imprimez uniquement si nécessaire.">Imprimer cette fiche</button>
+            <button class="button-secondary" onclick="window.location.href='../quelques-chiffres.html'">Retour aux autres services</button>
+        </div>
+    </div>
+    <footer>
+        <p class="mg-0">&copy; 2026 - COURDIER Rémy & Étudiants d'informatique de l'Université de La Réunion - <a href="../a-propos.html">À propos</a></p>
+    </footer>
+
+    <img src="../../assets/img/Instagram_logo.png" class="bg-logo" style="top: 170px; left: 8%;">
+    <img src="../../assets/img/Instagram_logo.png" class="bg-logo" style="top: 80px; right: 8%;">
+    <img src="../../assets/img/Instagram_logo.png" class="bg-logo" style="bottom: 70px; right: 4%;">
+
+    <script>
+        var ctx = document.getElementById('co2Chart').getContext('2d');
+        var co2Chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Instagram (1h - 52 g)', '1 km en voiture (150 g)', '100 g de boeuf (3 kg)'],
+                datasets: [{
+                    label: 'g CO2 par action',
+                    data: [52, 150, 3000],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(255, 99, 132, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 3500
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' g CO2';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        const WATER_PER_MIN = 0.12;   
+        const LAND_PER_MIN  = 1.03; 
+        const ENERGY_PER_MIN = 8.9;  
+
+        const input = document.getElementById("dailyMinutes");
+
+        const out = {
+            waterDay: document.getElementById("waterDay"),
+            landDay: document.getElementById("landDay"),
+            energyDay: document.getElementById("energyDay")
+        };
+
+        function formatNumber(n, unit) {
+            const value =
+            n >= 100 ? n.toFixed(0) :
+            n >= 10  ? n.toFixed(1) :
+                        n.toFixed(2);
+            return `${value.replace(".", ",")} ${unit}`;
+        }
+
+        function update() {
+            const minutes = Math.max(0, Number(input.value) || 0);
+
+            const waterDay = WATER_PER_MIN * minutes;
+            const landDay  = LAND_PER_MIN  * minutes;
+            const energyDay = ENERGY_PER_MIN * minutes;
+
+            out.waterDay.textContent = formatNumber(waterDay, "L");
+            out.landDay.textContent = formatNumber(landDay, "m²");
+            out.energyDay.textContent = formatNumber(energyDay, "mAh");
+        }
+
+        input.addEventListener("input", update);
+        update();
+    </script>
+   <footer>
+    <section class="footer-content">
+        <p>&copy; 2024 - Impact Environnemental de Instagram | Conçu par XITRA Lucas, étudiant de Master informatique, UR</p>
+    </section>
+    </footer>
+</body>
+</html>

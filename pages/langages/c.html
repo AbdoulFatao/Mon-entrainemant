@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Règles d'éco-conception pour C/C++ sur systèmes embarqués et IoT (M5Stack/ESP32) - Optimisations énergétiques">
+    <meta name="keywords"
+        content="C, C++, écoconception, IoT, M5Stack, ESP32, optimisation, consommation énergétique, green coding, embedded, deep sleep">
+    <meta name="author" content="Marius Roger">
+
+    <title>C/C++ IoT - Éco-conception & Optimisations</title>
+
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/styles/styles.css">
+    <link rel="stylesheet" href="../../assets/styles/print.css" media="print">
+
+    <script defer src="../../assets/scripts/scripts-tp.js"></script>
+
+    <style>
+        /* ── Code blocks ── */
+        .code-block {
+            background-color: #2d2d2d;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block.bad {
+            border-left-color: var(--emergency-color);
+            background-color: rgba(253, 99, 99, 0.08);
+        }
+
+        .code-block.good {
+            border-left-color: var(--success-color);
+            background-color: rgba(105, 240, 109, 0.08);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #e8e8e8;
+            white-space: pre-wrap;
+        }
+
+        .code-block code {
+            color: #e8e8e8;
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .variable {
+            color: #9cdcfe;
+        }
+
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .operator {
+            color: #d4d4d4;
+        }
+
+        /* ── Eco-rule cards ── */
+        .eco-rule {
+            margin: 20px 0;
+            background: linear-gradient(
+                135deg,
+                rgba(47, 223, 173, 0.05) 0%,
+                rgba(47, 223, 173, 0.01) 100%
+            );
+            border-radius: 10px;
+            border: 1px solid rgba(47, 223, 173, 0.3);
+            overflow: hidden;
+        }
+
+        .rule-header {
+            padding: 20px 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .rule-header:hover {
+            background-color: rgba(47, 223, 173, 0.1);
+        }
+
+        .rule-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .rule-number {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .rule-title-section {
+            flex: 1;
+        }
+
+        .rule-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0 0 5px 0;
+        }
+
+        .rule-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .rule-metrics {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .metric-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-color-light);
+            margin-top: 2px;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .eco-rule.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .rule-content {
+            max-height: 0;
+            overflow: hidden;
+            transition:
+                max-height 0.4s ease-out,
+                padding 0.4s ease-out;
+            padding: 0 25px;
+        }
+
+        .eco-rule.active .rule-content {
+            padding: 0 25px 25px 25px;
+        }
+
+        /* ── Impact badges ── */
+        .impact-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .impact-high {
+            background-color: var(--success-color);
+            color: var(--background-color);
+        }
+
+        .impact-medium {
+            background-color: var(--warning-color);
+            color: var(--background-color);
+        }
+
+        .impact-low {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        /* ── Info boxes ── */
+        .explanation-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--info-color);
+        }
+
+        .gain-box {
+            background-color: rgba(105, 240, 109, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--success-color);
+        }
+
+        /* ── Language nav ── */
+        .nav-languages {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-languages a {
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .nav-languages a:hover {
+            background-color: rgba(47, 223, 173, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .nav-languages a.active {
+            background-color: #639de1;
+            color: white;
+            border-color: #aaa;
+        }
+
+        /* ── Bibliography ── */
+        .bibliography {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .bibliography h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .bibliography-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .bibliography-list li {
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .rule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rule-metrics {
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="../langages.html" class="back-link">
+            <span class="back-arrow">🠔</span>
+            <span class="back-text">Retour</span>
+        </a>
+
+        <button class="hamburger" id="hamburger-menu" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+<nav id="navbar">
+            <ul>
+                <li class="mg-0"><a href="../../index.html">Home</a></li>
+                <li class="mg-0"><a href="../quelques-chiffres.html">Chiffres</a></li>
+                <li class="mg-0"><a href="../quizz-access.html">Quiz</a></li>
+                <li class="mg-0"><a href="../en-pratique.html">Ateliers</a></li>
+                <li class="mg-0"><a href="../outils.html">Outils</a></li>
+                <li class="mg-0"><a href="../langages.html" class="active">Langages</a></li>
+                <li class="mg-0"><a href="../ressources.html">Ressources</a></li>
+                <li class="mg-0"><a href="../terminologie.html">Terminologie</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main">
+        <h1><i class="fas fa-microchip"></i> C/C++ - Éco-conception &amp; Green Coding IoT</h1>
+
+        <div class="nav-languages">
+            <a href="./php.html"><i class="fab fa-php"></i> PHP</a>
+            <a href="./rust.html"><i class="fab fa-rust"></i> Rust</a>
+            <a href="python.html"><i class="fab fa-python"></i> Python</a>
+            <a href="c.html" class="active"><i class="fas fa-code"></i> C/C++</a>
+            <a href="java.html"><i class="fab fa-java"></i> Java</a>
+            <a href="dart.html"><i class="fas fa-cog"></i> Dart</a>
+            <a href="javascript.html"><i class="fab fa-js"></i> JavaScript</a>
+        </div>
+
+        <section class="intro-text">
+            <p>
+                Le langage C/C++ est le langage de référence pour les
+                <strong>systèmes embarqués et l'IoT</strong>.
+                Sur des plateformes comme le <strong>M5Stack (ESP32)</strong>, chaque milliampère compte :
+                une mauvaise gestion des ressources réduit l'autonomie, augmente les coûts d'infrastructure
+                et accroît l'empreinte écologique des déploiements.
+            </p>
+
+            <p>
+                Cette page présente <strong>10 règles d'éco-conception</strong> C/C++ adaptées à l'ESP32/M5Stack,
+                mesurées à l'ampèremètre, avec des équivalences CO₂ concrètes calculées sur la base
+                du mix énergétique de La Réunion (~573 g CO₂/kWh).
+            </p>
+        </section>
+
+        <section
+            style="
+                margin-top: 40px;
+                padding: 25px;
+                background-color: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+                border-left: 4px solid var(--primary-color);
+            "
+        >
+            <h3><i class="fas fa-info-circle"></i> Métriques de référence Green IT</h3>
+
+            <div
+                style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 15px;
+                    margin-top: 15px;
+                "
+            >
+                <div style="padding: 10px; background: rgba(47, 223, 173, 0.1); border-radius: 8px;">
+                    <strong>1 km voiture thermique</strong><br>
+                    112 g eq CO₂ (source ADEME)
+                </div>
+
+                <div style="padding: 10px; background: rgba(47, 223, 173, 0.1); border-radius: 8px;">
+                    <strong>La Réunion — mix énergétique</strong><br>
+                    ~573 g CO₂/kWh (thermique fossile)
+                </div>
+
+                <div style="padding: 10px; background: rgba(47, 223, 173, 0.1); border-radius: 8px;">
+                    <strong>Batterie IoT 700 mAh (3,7V)</strong><br>
+                    Durée de vie × consommation moy.
+                </div>
+
+                <div style="padding: 10px; background: rgba(47, 223, 173, 0.1); border-radius: 8px;">
+                    <strong>1 arbre mature</strong><br>
+                    Absorbe ~22 kg CO₂/an
+                </div>
+            </div>
+
+            <p style="margin-top: 15px; font-size: 0.9rem;">
+                Ces références permettent de contextualiser l'impact du firmware dans des termes concrets du quotidien.
+            </p>
+        </section>
+
+        <section style="margin-top: 60px;">
+            <h2 style="text-align: center; font-size: 2rem; color: var(--primary-color); margin-bottom: 40px;">
+                <i class="fas fa-leaf"></i> Exemple de 10 Éco-Rules C/C++ IoT
+            </h2>
+
+            <div class="eco-rule" id="rule1">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">1</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Gestion progressive de la luminosité &amp; Deep Sleep</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#énergie</span>
+                                <span class="tag">#écran</span>
+                                <span class="tag">#deep-sleep</span>
+                                <span class="tag">Intermédiaire</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−94%</div>
+                            <div class="metric-label">Consommation</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~23 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule2">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">2</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Optimiser les boucles et éviter les calculs redondants</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#cpu</span>
+                                <span class="tag">#performance</span>
+                                <span class="tag">Débutant</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">+35%</div>
+                            <div class="metric-label">Cycles économisés</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~1,5 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule3">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">3</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Utiliser les interruptions plutôt que le polling actif</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#interruptions</span>
+                                <span class="tag">#veille</span>
+                                <span class="tag">#énergie</span>
+                                <span class="tag">Avancé</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">×20</div>
+                            <div class="metric-label">Réduction conso.</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~16 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule4">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">4</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Limiter les impressions série et désactiver les logs en production</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#serial</span>
+                                <span class="tag">#logging</span>
+                                <span class="tag">#cpu</span>
+                                <span class="tag">Intermédiaire</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−57%</div>
+                            <div class="metric-label">Consommation</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~13 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule5">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">5</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Gestion fine de la mémoire — Stack &amp; Heap</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#mémoire</span>
+                                <span class="tag">#heap</span>
+                                <span class="tag">#stabilité</span>
+                                <span class="tag">Avancé</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−33%</div>
+                            <div class="metric-label">Consommation RAM</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~7 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule6">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">6</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Désactiver les modules et périphériques non utilisés</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#wifi</span>
+                                <span class="tag">#bluetooth</span>
+                                <span class="tag">#périphériques</span>
+                                <span class="tag">Intermédiaire</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−72%</div>
+                            <div class="metric-label">Consommation</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~22 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule7">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">7</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">
+                                Privilégier <code>constexpr</code> et <code>const</code> pour les valeurs fixes
+                            </h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#rom</span>
+                                <span class="tag">#compilateur</span>
+                                <span class="tag">#optimisation</span>
+                                <span class="tag">Intermédiaire</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−2 Ko</div>
+                            <div class="metric-label">RAM économisée</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">+10%</div>
+                            <div class="metric-label">Performance</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule8">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">8</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Adapter dynamiquement la fréquence CPU aux besoins</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#dvfs</span>
+                                <span class="tag">#cpu-freq</span>
+                                <span class="tag">#énergie</span>
+                                <span class="tag">Avancé</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−44%</div>
+                            <div class="metric-label">Consommation CPU</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~12 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule9">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">9</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Minimiser les accès à la mémoire Flash — cache en RAM</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#flash</span>
+                                <span class="tag">#cache</span>
+                                <span class="tag">#spiffs</span>
+                                <span class="tag">Avancé</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−65%</div>
+                            <div class="metric-label">Consommation Flash</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~22 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+
+            <div class="eco-rule" id="rule10">
+                <div class="rule-header">
+                    <div class="rule-header-left">
+                        <div class="rule-number">10</div>
+
+                        <div class="rule-title-section">
+                            <h3 class="rule-title">Choisir les types de données les plus petits adaptés au cas d'usage</h3>
+
+                            <div class="rule-tags">
+                                <span class="tag">#types</span>
+                                <span class="tag">#mémoire</span>
+                                <span class="tag">#cache</span>
+                                <span class="tag">Débutant</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-metrics">
+                        <div class="metric-item">
+                            <div class="metric-value">−60%</div>
+                            <div class="metric-label">Mémoire</div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-value">~2,5 km</div>
+                            <div class="metric-label">voiture/an</div>
+                        </div>
+                    </div>
+
+                    <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                    <i class="fas fa-chevron-down expand-icon"></i>
+                </div>
+
+                <div class="rule-content"></div>
+            </div>
+        </section>
+
+        <!-- Bibliographie -->
+        <section class="bibliography" style="margin-top:60px;">
+            <h2>Bibliographie &amp; Références</h2>
+            <ul class="bibliography-list" style="text-align:left;max-width:900px;margin:0 auto;">
+                <li><strong>[1]</strong> Espressif Systems. <em>ESP-IDF Programming Guide — Sleep Modes</em>.
+                    <a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/sleep_modes.html" target="_blank">[Docs]</a></li>
+                <li><strong>[2]</strong> M5Stack. <em>M5Stack Core Documentation &amp; API Reference</em>.
+                    <a href="https://docs.m5stack.com/" target="_blank">[docs.m5stack.com]</a></li>
+                <li><strong>[3]</strong> ADEME. <em>Base Carbone — Facteurs d'émissions</em>.
+                    <a href="https://bilans-ges.ademe.fr/" target="_blank">[Base Carbone]</a></li>
+                <li><strong>[4]</strong> GreenIT.fr. <em>Impacts environnementaux du numérique en France</em>. Janvier 2021.
+                    <a href="https://www.greenit.fr/" target="_blank">[GreenIT.fr]</a></li>
+                <li><strong>[5]</strong> Hähnel, M. et al. (2021). <em>Green Algorithms: Quantifying the Carbon Footprint of Computation</em>.
+                    Advanced Science, 8(12).
+                    <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/advs.202100707" target="_blank">[Paper]</a></li>
+                <li><strong>[6]</strong> Low Power Lab. <em>Arduino Low Power Library</em>.
+                    <a href="https://github.com/LowPowerLab/LowPower" target="_blank">[GitHub]</a></li>
+                <li><strong>[7]</strong> Random Nerd Tutorials. <em>ESP32 Deep Sleep and Low Power Modes</em>.
+                    <a href="https://randomnerdtutorials.com/esp32-deep-sleep-low-power/" target="_blank">[Tutorial]</a></li>
+                <li><strong>[8]</strong> Lanza, J. et al. (2021). <em>A Survey on Green IoT — Embedded Systems</em>.
+                    ScienceDirect.
+                    <a href="https://www.sciencedirect.com/science/article/pii/S2542660521000110" target="_blank">[Article]</a></li>
+                <li><strong>[9]</strong> Embedded.com. <em>Optimizing C/C++ for Embedded Systems</em>.
+                    <a href="https://www.embedded.com/optimizing-c-for-embedded-systems/" target="_blank">[Article]</a></li>
+                <li><strong>[10]</strong> Espressif Systems. <em>ESP-IDF — Power Management API</em>.
+                    <a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/power_management.html" target="_blank">[Docs]</a></li>
+                <li><strong>[11]</strong> ISO/IEC 14882:2020. <em>Programming Language C++ — constexpr specifier</em>.</li>
+                <li><strong>[12]</strong> Ganssle, J. (2008). <em>The Art of Writing Embedded Systems</em>. Newnes.</li>
+            </ul>
+        </section>
+
+        <div
+            class="button-container"
+            style="
+                margin-top: 60px;
+                gap: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            "
+        >
+            <a href="../langages.html" class="button">
+                <i class="fas fa-arrow-left"></i> Retour aux langages
+            </a>
+
+            <a href="../../index.html" class="button" style="background-color: var(--info-color);">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+
+            <a href="../en-pratique.html" class="button" style="background-color: var(--success-color);">
+                <i class="fas fa-code"></i> Ateliers pratiques
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p class="mg-0">
+            &copy; 2026 - COURDIER Rémy & Étudiants d'informatique de l'Université de La Réunion -
+            <a href="./a-propos.html">À propos</a>
+        </p>
+    </footer>
+
+    <script>
+        const ruleContents = {
+            rule1: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> L'écran LCD du M5Stack est le plus grand consommateur
+                        d'énergie (~80–100 mA à pleine luminosité). En réduisant progressivement la luminosité
+                        avant extinction, puis en passant en Deep Sleep, on passe d'une consommation de
+                        ~150 mA à moins de 0,01 mA.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : écran toujours allumé</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="comment">// Mauvais : écran pleine luminosité en permanence</span>
+<span class="keyword">void</span> <span class="function">loop</span>() {
+    M5.Lcd.setBrightness(<span class="string">255</span>);
+    displaySensorData();
+    delay(<span class="string">10000</span>);
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : dimming progressif + Deep Sleep</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">void</span> <span class="function">displayAndSleep</span>() {
+    M5.Lcd.setBrightness(<span class="string">255</span>);
+    displaySensorData();
+    delay(<span class="string">5000</span>);
+
+    M5.Lcd.setBrightness(<span class="string">128</span>);
+    delay(<span class="string">3000</span>);
+
+    M5.Lcd.setBrightness(<span class="string">0</span>);
+    delay(<span class="string">500</span>);
+
+    esp_sleep_enable_timer_wakeup(<span class="string">60</span> * <span class="string">1000000</span>);
+    esp_deep_sleep_start();
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Sans optimisation : <strong>4,86 kWh/an</strong></li>
+                        <li>Avec optimisation : <strong>0,32 kWh/an</strong></li>
+                        <li>Économie : <strong>2,62 kg CO₂/an</strong></li>
+                        <li>🚗 Équivalent voiture : <strong>~23 km non parcourus</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule2: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Sur un microcontrôleur, chaque appel de fonction
+                        dans une condition de boucle est réévalué à chaque itération.
+                        <code>strlen()</code> peut donc être appelé inutilement des milliers de fois.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : appel redondant dans la condition</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="string">0</span>; i &lt; strlen(str); i++) {
+    process(str[i]);
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : hoistage du calcul invariant</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">const int</span> len = strlen(str);
+
+<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="string">0</span>; i &lt; len; i++) {
+    process(str[i]);
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Réduction des cycles CPU : <strong>+35%</strong></li>
+                        <li>Économie : <strong>~0,17 kg CO₂/an</strong></li>
+                        <li>🚗 Équivalent voiture : <strong>~1,5 km non parcourus</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule3: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> En mode polling, le CPU vérifie un état en permanence.
+                        Avec les interruptions, il peut rester en veille et ne se réveiller qu'en cas d'événement.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : polling actif</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">loop</span>() {
+    <span class="keyword">if</span>(digitalRead(BUTTON_PIN) == HIGH) {
+        handleButton();
+    }
+
+    delay(<span class="string">10</span>);
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : interruption + light sleep</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">volatile bool</span> buttonPressed = <span class="keyword">false</span>;
+
+<span class="keyword">void</span> IRAM_ATTR <span class="function">buttonISR</span>() {
+    buttonPressed = <span class="keyword">true</span>;
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+    <span class="keyword">if</span>(buttonPressed) {
+        handleButton();
+        buttonPressed = <span class="keyword">false</span>;
+    }
+
+    esp_light_sleep_start();
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Économie : <strong>~1,76 kg CO₂/an</strong></li>
+                        <li>🚗 Équivalent voiture : <strong>~16 km non parcourus</strong></li>
+                        <li>Autonomie batterie largement améliorée.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule4: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Les impressions série mobilisent le CPU pour formater
+                        et transmettre les données. En production, ces logs deviennent souvent inutiles.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : logs fréquents sans condition</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">loop</span>() {
+    <span class="keyword">float</span> x = M5.IMU.gyroX;
+    Serial.print(<span class="string">"Gyro X: "</span>);
+    Serial.println(x);
+    delay(<span class="string">10</span>);
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : logs conditionnels</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">#define</span> DEBUG_MODE <span class="keyword">false</span>
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+    <span class="keyword">float</span> x = M5.IMU.gyroX;
+
+    <span class="keyword">if</span>(DEBUG_MODE) {
+        Serial.println(x);
+    }
+
+    delay(<span class="string">1000</span>);
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Consommation réduite d'environ <strong>57%</strong></li>
+                        <li>🚗 Équivalent voiture : <strong>~13 km non parcourus</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule5: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Une mauvaise gestion de la stack et du heap
+                        peut entraîner des crashes, de la fragmentation mémoire et des redémarrages énergivores.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : gros tableau sur la stack</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">processData</span>() {
+    <span class="keyword">int</span> bigArray[<span class="string">10000</span>];
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : allocation dynamique contrôlée</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">void</span> <span class="function">processData</span>(<span class="keyword">size_t</span> count) {
+    <span class="keyword">int</span> *arr = (<span class="keyword">int</span>*)heap_caps_malloc(
+        count * <span class="keyword">sizeof</span>(<span class="keyword">int</span>),
+        MALLOC_CAP_INTERNAL
+    );
+
+    <span class="keyword">if</span>(arr == <span class="keyword">nullptr</span>) {
+        <span class="keyword">return</span>;
+    }
+
+    processArray(arr, count);
+    free(arr);
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Consommation RAM réduite d'environ <strong>33%</strong></li>
+                        <li>Économie : <strong>~0,42 kg CO₂/an</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule6: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Wi-Fi, Bluetooth et certains périphériques restent parfois actifs
+                        même lorsqu'ils ne sont pas utiles, ce qui augmente fortement la consommation.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : modules actifs par défaut</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">setup</span>() {
+    M5.begin();
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : désactivation explicite</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">void</span> <span class="function">setup</span>() {
+    M5.begin();
+
+    WiFi.mode(WIFI_OFF);
+    btStop();
+    adc_power_release();
+    esp_wifi_stop();
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Consommation réduite d'environ <strong>72%</strong></li>
+                        <li>Économie : <strong>~1,49 kg CO₂/an</strong></li>
+                        <li>🚗 Équivalent voiture : <strong>~22 km non parcourus</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule7: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Les constantes permettent au compilateur
+                        d'optimiser davantage le code et évitent parfois des allocations inutiles en RAM.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : valeurs modifiables inutilement</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">float</span> PI = <span class="string">3.14159f</span>;
+<span class="keyword">int</span> MAX_BUFFER = <span class="string">512</span>;</code></pre>
+                </div>
+
+                <h4>✅ Solution : constantes explicites</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">constexpr float</span> PI = <span class="string">3.14159f</span>;
+<span class="keyword">constexpr int</span> MAX_BUFFER = <span class="string">512</span>;</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>RAM économisée.</li>
+                        <li>Performance CPU améliorée.</li>
+                        <li>Économie : <strong>~0,18 kg CO₂/an</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule8: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> L'ESP32 peut fonctionner à plusieurs fréquences.
+                        Réduire la fréquence lorsque la charge est faible limite la consommation.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : fréquence maximale en permanence</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">setup</span>() {
+    <span class="comment">// 240 MHz par défaut</span>
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : fréquence adaptée aux besoins</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">void</span> <span class="function">setup</span>() {
+    setCpuFrequencyMhz(<span class="string">80</span>);
+}
+
+<span class="keyword">void</span> <span class="function">runHeavyComputation</span>() {
+    setCpuFrequencyMhz(<span class="string">240</span>);
+    performFFT();
+    setCpuFrequencyMhz(<span class="string">80</span>);
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Consommation CPU réduite d'environ <strong>44%</strong></li>
+                        <li>Économie : <strong>~0,74 kg CO₂/an</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule9: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Les lectures répétées dans la mémoire Flash
+                        consomment davantage qu'un accès à une donnée déjà chargée en RAM.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : lecture Flash dans la boucle</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">void</span> <span class="function">loop</span>() {
+    File f = SPIFFS.open(<span class="string">"/config.json"</span>, <span class="string">"r"</span>);
+    String config = f.readString();
+    f.close();
+}</code></pre>
+                </div>
+
+                <h4>✅ Solution : cache en RAM</h4>
+
+                <div class="code-block good">
+<pre><code>String configCache = <span class="string">""</span>;
+
+<span class="keyword">void</span> <span class="function">setup</span>() {
+    File f = SPIFFS.open(<span class="string">"/config.json"</span>, <span class="string">"r"</span>);
+    configCache = f.readString();
+    f.close();
+}
+
+<span class="keyword">void</span> <span class="function">loop</span>() {
+    applyConfig(configCache);
+}</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Consommation Flash réduite d'environ <strong>65%</strong></li>
+                        <li>Économie : <strong>~1,38 kg CO₂/an</strong></li>
+                    </ul>
+                </div>
+            `,
+
+            rule10: `
+                <div class="explanation-box">
+                    <p>
+                        <strong>Pourquoi ?</strong> Utiliser un type trop large gaspille de la mémoire
+                        et peut dégrader l'efficacité du cache.
+                    </p>
+                </div>
+
+                <h4>❌ Anti-pattern : types surdimensionnés</h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">long</span> counter = <span class="string">0</span>;
+<span class="keyword">double</span> temperature = <span class="string">25.5</span>;</code></pre>
+                </div>
+
+                <h4>✅ Solution : types adaptés</h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">uint8_t</span> counter = <span class="string">0</span>;
+<span class="keyword">float</span> temperature = <span class="string">25.5f</span>;</code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <p><strong>📊 Impact mesuré :</strong></p>
+                    <ul>
+                        <li>Mémoire économisée : <strong>~60%</strong></li>
+                        <li>Performance cache améliorée.</li>
+                        <li>Économie : <strong>~0,28 kg CO₂/an</strong></li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function closeRule(rule) {
+            const content = rule.querySelector('.rule-content');
+
+            rule.classList.remove('active');
+            content.style.maxHeight = '0px';
+            content.innerHTML = '';
+            content.dataset.loaded = 'false';
+        }
+
+        function activateRule(rule, shouldScroll) {
+            const content = rule.querySelector('.rule-content');
+            const ruleId = rule.id;
+
+            document.querySelectorAll('.eco-rule.active').forEach(openRuleCard => {
+                if (openRuleCard !== rule) {
+                    closeRule(openRuleCard);
+                }
+            });
+
+            if (content.dataset.loaded !== 'true') {
+                content.innerHTML = ruleContents[ruleId] || '';
+                content.dataset.loaded = 'true';
+            }
+
+            rule.classList.add('active');
+
+            requestAnimationFrame(() => {
+                content.style.maxHeight = content.scrollHeight + 'px';
+
+                if (shouldScroll) {
+                    rule.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        function toggleRule(ruleId) {
+            const rule = document.getElementById(ruleId);
+
+            if (!rule) {
+                return;
+            }
+
+            if (rule.classList.contains('active')) {
+                closeRule(rule);
+            } else {
+                activateRule(rule, false);
+            }
+        }
+
+        document.querySelectorAll('.eco-rule .rule-header').forEach(header => {
+            header.addEventListener('click', function () {
+                toggleRule(this.parentElement.id);
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.eco-rule.active').forEach(rule => {
+                const content = rule.querySelector('.rule-content');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+
+</html>

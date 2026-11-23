@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Règles d'éco-conception pour Java - Optimisations environnementales"
+    >
+    <meta
+        name="keywords"
+        content="Java, écoconception, optimisation, performance, empreinte carbone, green coding, JVM"
+    >
+    <meta name="author" content="Youssouf ONIAN">
+
+    <title>Java - Éco-conception & Optimisations</title>
+
+    <link rel="icon" href="../../assets/img/favicon.ico" type="image/x-icon">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap"
+        rel="stylesheet"
+    >
+    <link rel="stylesheet" href="../../assets/styles/styles.css">
+    <link rel="stylesheet" href="../../assets/styles/print.css" media="print">
+
+    <script defer src="../../assets/scripts/scripts-tp.js"></script>
+
+    <style>
+        /* Styles spécifiques pour les code blocks */
+        .code-block {
+            background-color: #2d2d2d;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block.bad {
+            border-left-color: var(--emergency-color);
+            background-color: rgba(253, 99, 99, 0.1);
+        }
+
+        .code-block.good {
+            border-left-color: var(--success-color);
+            background-color: rgba(105, 240, 109, 0.1);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #e8e8e8;
+        }
+
+        .code-block code {
+            color: #e8e8e8;
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .function {
+            color: #dcdcaa;
+        }
+
+        .variable {
+            color: #9cdcfe;
+        }
+
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .operator {
+            color: #d4d4d4;
+        }
+
+        .impact-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .impact-high {
+            background-color: var(--success-color);
+            color: var(--background-color);
+        }
+
+        .impact-medium {
+            background-color: var(--warning-color);
+            color: var(--background-color);
+        }
+
+        .impact-low {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .explanation-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--info-color);
+        }
+
+        .gain-box {
+            background-color: rgba(105, 240, 109, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid var(--success-color);
+        }
+
+        .nav-languages {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-languages a {
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .nav-languages a:hover {
+            background-color: rgba(47, 223, 173, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .nav-languages a.active {
+            background-color: #f89820;
+            color: white;
+            border-color: #aaa;
+        }
+
+        /* Cartes de règles */
+        .eco-rule {
+            margin: 20px 0;
+            padding: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(47, 223, 173, 0.05) 0%,
+                rgba(47, 223, 173, 0.01) 100%
+            );
+            border-radius: 10px;
+            border: 1px solid rgba(47, 223, 173, 0.3);
+            overflow: hidden;
+        }
+
+        .rule-header {
+            width: 100%;
+            border: none;
+            padding: 20px 25px;
+            cursor: pointer;
+            background: transparent;
+            color: inherit;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .rule-header:hover {
+            background-color: rgba(47, 223, 173, 0.1);
+        }
+
+        .rule-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .rule-number {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .rule-title {
+            display: block;
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+        }
+
+        .rule-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .rule-metrics {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .metric-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .metric-value {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-color-light);
+            margin-top: 2px;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .eco-rule.active .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .rule-content {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 25px;
+            transition:
+                max-height 0.4s ease,
+                padding 0.4s ease;
+        }
+
+        .eco-rule.active .rule-content {
+            padding: 0 25px 25px 25px;
+        }
+
+        @media (max-width: 768px) {
+            .rule-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rule-metrics {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .rule-header-side {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .rule-title {
+                font-size: 1.2rem;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="../langages.html" class="back-link">
+            <span class="back-arrow">🠔</span>
+            <span class="back-text">Retour</span>
+        </a>
+
+        <button class="hamburger" id="hamburger-menu" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+<nav id="navbar">
+            <ul>
+                <li class="mg-0"><a href="../../index.html">Home</a></li>
+                <li class="mg-0"><a href="../quelques-chiffres.html">Chiffres</a></li>
+                <li class="mg-0"><a href="../quizz-access.html">Quiz</a></li>
+                <li class="mg-0"><a href="../en-pratique.html">Ateliers</a></li>
+                <li class="mg-0"><a href="../outils.html">Outils</a></li>
+                <li class="mg-0"><a href="../langages.html" class="active">Langages</a></li>
+                <li class="mg-0"><a href="../ressources.html">Ressources</a></li>
+                <li class="mg-0"><a href="../terminologie.html">Terminologie</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main">
+        <h1><i class="fab fa-java"></i> Java - Éco-conception & Green Coding</h1>
+
+        <!-- Navigation entre langages -->
+        <div class="nav-languages">
+            <a href="./php.html"><i class="fab fa-php"></i> PHP</a>
+            <a href="./rust.html"><i class="fab fa-rust"></i> Rust</a>
+            <a href="python.html"><i class="fab fa-python"></i> Python</a>
+            <a href="c.html"><i class="fas fa-code"></i> C/C++</a>
+            <a href="java.html" class="active"><i class="fab fa-java"></i> Java</a>
+            <a href="dart.html"><i class="fas fa-cog"></i> Dart</a>
+            <a href="javascript.html"><i class="fab fa-js"></i> JavaScript</a>
+        </div>
+
+        <!-- Introduction -->
+        <section class="intro-text">
+            <p>
+                Java se classe <strong>5ᵉ sur 27</strong> en termes d'efficacité énergétique, consommant
+                environ <strong>1.98× plus d'énergie</strong> que C pour exécuter les mêmes programmes.
+                Avec plus de <strong>35 millions de développeurs</strong> et une présence massive dans l'entreprise,
+                le cloud et Android, les optimisations Java ont un <strong>impact environnemental considérable</strong>.
+            </p>
+
+            <br>
+
+            <p>
+                Cette page présente <strong>10 règles d'éco-conception</strong> concrètes pour réduire
+                l'empreinte environnementale de vos applications Java, avec des exemples de code
+                avant/après et des mesures de gains réels.
+            </p>
+        </section>
+
+        <!-- Statistiques clés -->
+        <section class="services-container">
+            <section class="stats-icons">
+                <div class="stat-item">
+                    <i class="fas fa-bolt"></i>
+                    <h2>5ᵉ / 27</h2>
+                    <p>Classement énergétique des langages <sup><a href="#source1">[1]</a></sup></p>
+                </div>
+
+                <div class="stat-item">
+                    <i class="fas fa-globe"></i>
+                    <h2>3ème</h2>
+                    <p>Langage de programmation le plus populaire (janvier 2026) <sup><a href="#source2">[2]</a></sup></p>
+                </div>
+
+                <div class="stat-item">
+                    <i class="fas fa-fire"></i>
+                    <h2>1.98× vs C</h2>
+                    <p>Consommation énergétique relative <sup><a href="#source1">[1]</a></sup></p>
+                </div>
+            </section>
+        </section>
+
+        <!-- LES 10 ÉCO-RULES -->
+        <section style="margin-top: 60px;">
+            <h2 style="text-align: center; font-size: 2rem; color: var(--primary-color); margin-bottom: 40px;">
+                <i class="fas fa-leaf"></i> Exemple de 10 Éco-Rules Java
+            </h2>
+
+            <article class="eco-rule" id="rule1">
+                <button class="rule-header" type="button" onclick="toggleRule('rule1')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">1</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">StringBuilder - Concaténation de chaînes en boucle</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#strings</span>
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#performance</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">Rapide</span>
+                            <span class="metric-label">Concaténation</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">d'allocations</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule2">
+                <button class="rule-header" type="button" onclick="toggleRule('rule2')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">2</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">ArrayList sizing - Pré-dimensionner les collections</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#collections</span>
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#allocation</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">de copies</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Heap</span>
+                            <span class="metric-label">optimisé</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule3">
+                <button class="rule-header" type="button" onclick="toggleRule('rule3')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">3</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Stream vs Loop - Choisir la bonne approche</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#streams</span>
+                                <span class="tag">#boucles</span>
+                                <span class="tag">#cpu</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">Jusqu'à</span>
+                            <span class="metric-label">3×</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">d'overhead</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule4">
+                <button class="rule-header" type="button" onclick="toggleRule('rule4')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">4</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">HashSet lookup - Recherche dans les collections</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#collections</span>
+                                <span class="tag">#recherche</span>
+                                <span class="tag">#algorithmique</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">O(1)</span>
+                            <span class="metric-label">Recherche</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Très</span>
+                            <span class="metric-label">rapide</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule5">
+                <button class="rule-header" type="button" onclick="toggleRule('rule5')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">5</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Primitive types - Éviter l'autoboxing inutile</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#types</span>
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#garbage-collector</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">-75%</span>
+                            <span class="metric-label">Mémoire</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">de GC</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule6">
+                <button class="rule-header" type="button" onclick="toggleRule('rule6')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">6</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Try-with-resources - Gestion des ressources</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#ressources</span>
+                                <span class="tag">#io</span>
+                                <span class="tag">#fiabilite</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">0</span>
+                            <span class="metric-label">fuite oubliée</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Auto</span>
+                            <span class="metric-label">fermeture</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule7">
+                <button class="rule-header" type="button" onclick="toggleRule('rule7')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">7</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">JVM tuning - Optimiser les paramètres JVM</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#jvm</span>
+                                <span class="tag">#serveur</span>
+                                <span class="tag">#production</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">Heap</span>
+                            <span class="metric-label">maîtrisé</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">GC</span>
+                            <span class="metric-label">adapté</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule8">
+                <button class="rule-header" type="button" onclick="toggleRule('rule8')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">8</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Lazy initialization - Initialisation différée</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#initialisation</span>
+                                <span class="tag">#memoire</span>
+                                <span class="tag">#startup</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">À la</span>
+                            <span class="metric-label">demande</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">au démarrage</span>
+                        </span>
+
+                        <span class="impact-badge impact-medium">⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule9">
+                <button class="rule-header" type="button" onclick="toggleRule('rule9')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">9</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Connection pooling - Réutiliser les connexions</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#database</span>
+                                <span class="tag">#reseau</span>
+                                <span class="tag">#performance</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">×10-50</span>
+                            <span class="metric-label">Connexion</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">-80%</span>
+                            <span class="metric-label">Charge DB</span>
+                        </span>
+
+                        <span class="impact-badge impact-high">⭐⭐⭐⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+
+            <article class="eco-rule" id="rule10">
+                <button class="rule-header" type="button" onclick="toggleRule('rule10')">
+                    <span class="rule-header-left">
+                        <span class="rule-number">10</span>
+
+                        <span class="rule-title-section">
+                            <span class="rule-title">Logging optimisé - Logs conditionnels</span>
+
+                            <span class="rule-tags">
+                                <span class="tag">#logs</span>
+                                <span class="tag">#debug</span>
+                                <span class="tag">#micro-optimisation</span>
+                            </span>
+                        </span>
+                    </span>
+
+                    <span class="rule-metrics">
+                        <span class="metric-item">
+                            <span class="metric-value">10-30%</span>
+                            <span class="metric-label">CPU évité</span>
+                        </span>
+
+                        <span class="metric-item">
+                            <span class="metric-value">Moins</span>
+                            <span class="metric-label">de Strings</span>
+                        </span>
+
+                        <span class="impact-badge impact-low">⭐</span>
+                        <i class="fas fa-chevron-down expand-icon"></i>
+                    </span>
+                </button>
+
+                <div class="rule-content" aria-live="polite"></div>
+            </article>
+        </section>
+
+        <!-- Sources -->
+        <section class="bibliography" style="margin-top: 60px;">
+            <h2>Sources & Références</h2>
+
+            <ul class="bibliography-list" style="text-align: left; max-width: 900px; margin: 0 auto;">
+                <li id="source1">
+                    <strong>[1]</strong> Pereira, R., Couto, M., Ribeiro, F., Rua, R., Cunha, J., Fernandes, J. P., & Saraiva, J. (2017).
+                    <em>Energy efficiency across programming languages.</em>
+                    <a href="https://repositorium.uminho.pt/bitstream/1822/69044/1/paper.pdf" target="_blank">[PDF]</a>
+                </li>
+
+                <li id="source2">
+                    <strong>[2]</strong> TIOBE.
+                    <em>TIOBE Programming Community index.</em>
+                    <a href="https://www.tiobe.com/tiobe-index/" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source3">
+                    <strong>[3]</strong> Baeldung.
+                    <em>Performance of String Concatenation in Java.</em>
+                    <a href="https://www.baeldung.com/java-string-concatenation" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source4">
+                    <strong>[4]</strong> Oracle.
+                    <em>ArrayList Initial Capacity - Java Documentation.</em>
+                    <a href="https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source5">
+                    <strong>[5]</strong> Baeldung.
+                    <em>Java 8 Streams vs Loops Performance.</em>
+                    <a href="https://www.baeldung.com/java-streams-vs-loops" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source6">
+                    <strong>[6]</strong> Oracle.
+                    <em>HashSet vs ArrayList Performance - Collections Framework.</em>
+                    <a href="https://docs.oracle.com/javase/tutorial/collections/implementations/set.html" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source7">
+                    <strong>[7]</strong>
+                    <em>Performance impact of autoboxing.</em>
+                    <a href="https://stackoverflow.com/questions/3430671/performance-impact-of-autoboxing" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source8">
+                    <strong>[8]</strong> Oracle.
+                    <em>The try-with-resources Statement.</em>
+                    <a href="https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source9">
+                    <strong>[9]</strong> Oracle.
+                    <em>Java HotSpot VM Options - JVM Tuning Guide.</em>
+                    <a href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source10">
+                    <strong>[10]</strong>
+                    <em>What is lazy initialization and why is it useful?</em>
+                    <a href="https://stackoverflow.com/questions/978759/what-is-lazy-initialization-and-why-is-it-useful" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source11">
+                    <strong>[11]</strong> HikariCP.
+                    <em>Fast, simple, reliable - HikariCP connection pool.</em>
+                    <a href="https://github.com/brettwooldridge/HikariCP" target="_blank">[GitHub]</a>
+                </li>
+
+                <li id="source12">
+                    <strong>[12]</strong> SLF4J.
+                    <em>SLF4J Parameterized Messages - Performance.</em>
+                    <a href="https://www.slf4j.org/faq.html#logging_performance" target="_blank">[Lien]</a>
+                </li>
+
+                <li id="source13">
+                    <strong>[13]</strong> Green Code Initiative.
+                    <em>ecoCode - Reduce the environmental footprint of your Java software programs.</em>
+                    <a href="https://github.com/green-code-initiative/ecoCode" target="_blank">[GitHub]</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Navigation -->
+        <div
+            class="button-container"
+            style="
+                margin-top: 60px;
+                gap: 15px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            "
+        >
+            <a href="../langages.html" class="button">
+                <i class="fas fa-arrow-left"></i> Retour aux langages
+            </a>
+
+            <a href="../../index.html" class="button" style="background-color: var(--info-color);">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+
+            <a href="../en-pratique.html" class="button" style="background-color: var(--success-color);">
+                <i class="fas fa-code"></i> Ateliers pratiques
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p class="mg-0">
+            &copy; 2026 - COURDIER Rémy & Étudiants d'informatique de l'Université de La Réunion -
+            <a href="./a-propos.html">À propos</a>
+        </p>
+    </footer>
+
+    <script>
+        const ruleContents = {
+            rule1: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">""</span><span class="operator">;</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">String</span> <span class="variable">item</span> <span class="operator">:</span> <span class="variable">items</span><span class="operator">)</span> <span class="operator">{</span>
+    <span class="variable">result</span> <span class="operator">+=</span> <span class="variable">item</span> <span class="operator">+</span> <span class="string">", "</span><span class="operator">;</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li>Les <code>String</code> sont <strong>immuables</strong> en Java.</li>
+                        <li>Chaque <code>+=</code> crée un <strong>nouvel objet String</strong> en mémoire.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">StringBuilder</span><span class="operator">();</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">String</span> <span class="variable">item</span> <span class="operator">:</span> <span class="variable">items</span><span class="operator">)</span> <span class="operator">{</span>
+    <span class="variable">sb</span><span class="operator">.</span><span class="function">append</span><span class="operator">(</span><span class="variable">item</span><span class="operator">).</span><span class="function">append</span><span class="operator">(</span><span class="string">", "</span><span class="operator">);</span>
+<span class="operator">}</span>
+<span class="keyword">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="variable">sb</span><span class="operator">.</span><span class="function">toString</span><span class="operator">();</span>
+
+<span class="comment">// Ou avec String.join() (Java 8+) :</span>
+<span class="keyword">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="function">String</span><span class="operator">.</span><span class="function">join</span><span class="operator">(</span><span class="string">", "</span><span class="operator">,</span> <span class="variable">items</span><span class="operator">);</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains mesurés :</h4>
+                    <ul style="text-align: left;">
+                        <li><strong>Plus rapide</strong> pour les grandes listes.</li>
+                        <li>Réduit la <strong>consommation mémoire</strong>.</li>
+                        <li>Moins de pression sur le Garbage Collector.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule2: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">List</span><span class="operator">&lt;</span><span class="keyword">String</span><span class="operator">&gt;</span> <span class="variable">results</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">ArrayList</span><span class="operator">&lt;&gt;();</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span> <span class="variable">i</span> <span class="operator">&lt;</span> <span class="string">10000</span><span class="operator">;</span> <span class="variable">i</span><span class="operator">++)</span> <span class="operator">{</span>
+    <span class="variable">results</span><span class="operator">.</span><span class="function">add</span><span class="operator">(</span><span class="function">process</span><span class="operator">(</span><span class="variable">i</span><span class="operator">));</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li><code>ArrayList</code> augmente sa capacité lorsqu'elle est pleine.</li>
+                        <li>Chaque redimensionnement implique une allocation et une copie.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">List</span><span class="operator">&lt;</span><span class="keyword">String</span><span class="operator">&gt;</span> <span class="variable">results</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">ArrayList</span><span class="operator">&lt;&gt;(</span><span class="string">10000</span><span class="operator">);</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span> <span class="variable">i</span> <span class="operator">&lt;</span> <span class="string">10000</span><span class="operator">;</span> <span class="variable">i</span><span class="operator">++)</span> <span class="operator">{</span>
+    <span class="variable">results</span><span class="operator">.</span><span class="function">add</span><span class="operator">(</span><span class="function">process</span><span class="operator">(</span><span class="variable">i</span><span class="operator">));</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>Élimine les copies de tableaux inutiles.</li>
+                        <li>Même principe pour <code>HashMap</code>, <code>HashSet</code>, etc.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule3: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Usage inapproprié des Streams :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="variable">list</span><span class="operator">.</span><span class="function">stream</span><span class="operator">()</span>
+    <span class="operator">.</span><span class="function">forEach</span><span class="operator">(</span><span class="variable">item</span> <span class="operator">-&gt;</span> <span class="function">process</span><span class="operator">(</span><span class="variable">item</span><span class="operator">));</span>
+
+<span class="keyword">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="function">IntStream</span><span class="operator">.</span><span class="function">range</span><span class="operator">(</span><span class="string">0</span><span class="operator">,</span> <span class="string">1000</span><span class="operator">)</span>
+    <span class="operator">.</span><span class="function">boxed</span><span class="operator">()</span>
+    <span class="operator">.</span><span class="function">reduce</span><span class="operator">(</span><span class="string">0</span><span class="operator">,</span> <span class="function">Integer</span><span class="operator">::</span><span class="function">sum</span><span class="operator">);</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Quand éviter les Streams ?</h4>
+                    <ul style="text-align: left;">
+                        <li>Les streams peuvent créer des objets intermédiaires.</li>
+                        <li><code>boxed()</code> transforme les primitifs en objets.</li>
+                        <li>Pour une simple boucle, une approche classique peut être plus sobre.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">for</span> <span class="operator">(</span><span class="keyword">Item</span> <span class="variable">item</span> <span class="operator">:</span> <span class="variable">list</span><span class="operator">)</span> <span class="operator">{</span>
+    <span class="function">process</span><span class="operator">(</span><span class="variable">item</span><span class="operator">);</span>
+<span class="operator">}</span>
+
+<span class="keyword">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="function">IntStream</span><span class="operator">.</span><span class="function">range</span><span class="operator">(</span><span class="string">0</span><span class="operator">,</span> <span class="string">1000</span><span class="operator">).</span><span class="function">sum</span><span class="operator">();</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Bonnes pratiques :</h4>
+                    <ul style="text-align: left;">
+                        <li><strong>Boucles for</strong> : effets de bord, traitements simples.</li>
+                        <li><strong>Streams</strong> : transformations complexes et chaînes d'opérations.</li>
+                        <li>Préférer les streams primitifs quand ils sont adaptés.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule4: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">List</span><span class="operator">&lt;</span><span class="keyword">String</span><span class="operator">&gt;</span> <span class="variable">allowedRoles</span> <span class="operator">=</span> <span class="function">Arrays</span><span class="operator">.</span><span class="function">asList</span><span class="operator">(</span>
+    <span class="string">"admin"</span><span class="operator">,</span>
+    <span class="string">"editor"</span><span class="operator">,</span>
+    <span class="string">"author"</span>
+<span class="operator">);</span>
+
+<span class="keyword">if</span> <span class="operator">(</span><span class="variable">allowedRoles</span><span class="operator">.</span><span class="function">contains</span><span class="operator">(</span><span class="variable">userRole</span><span class="operator">))</span> <span class="operator">{</span>
+    <span class="comment">// Accès autorisé</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li><code>List.contains()</code> parcourt la liste séquentiellement.</li>
+                        <li>Le coût augmente avec la taille de la collection.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">Set</span><span class="operator">&lt;</span><span class="keyword">String</span><span class="operator">&gt;</span> <span class="variable">allowedRoles</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">HashSet</span><span class="operator">&lt;&gt;(</span>
+    <span class="function">Arrays</span><span class="operator">.</span><span class="function">asList</span><span class="operator">(</span><span class="string">"admin"</span><span class="operator">,</span> <span class="string">"editor"</span><span class="operator">,</span> <span class="string">"author"</span><span class="operator">)</span>
+<span class="operator">);</span>
+
+<span class="keyword">if</span> <span class="operator">(</span><span class="variable">allowedRoles</span><span class="operator">.</span><span class="function">contains</span><span class="operator">(</span><span class="variable">userRole</span><span class="operator">))</span> <span class="operator">{</span>
+    <span class="comment">// Accès autorisé</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains mesurés :</h4>
+                    <ul style="text-align: left;">
+                        <li>Recherche beaucoup plus rapide pour les grandes collections.</li>
+                        <li>Moins de CPU consommé sur les recherches répétées.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule5: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">Integer</span> <span class="variable">total</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span> <span class="variable">i</span> <span class="operator">&lt;</span> <span class="string">1000000</span><span class="operator">;</span> <span class="variable">i</span><span class="operator">++)</span> <span class="operator">{</span>
+    <span class="variable">total</span> <span class="operator">+=</span> <span class="variable">i</span><span class="operator">;</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li><code>Integer</code> crée des objets là où un primitif suffit.</li>
+                        <li>L'autoboxing augmente le travail du Garbage Collector.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">long</span> <span class="variable">total</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span>
+<span class="keyword">for</span> <span class="operator">(</span><span class="keyword">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="string">0</span><span class="operator">;</span> <span class="variable">i</span> <span class="operator">&lt;</span> <span class="string">1000000</span><span class="operator">;</span> <span class="variable">i</span><span class="operator">++)</span> <span class="operator">{</span>
+    <span class="variable">total</span> <span class="operator">+=</span> <span class="variable">i</span><span class="operator">;</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains mesurés :</h4>
+                    <ul style="text-align: left;">
+                        <li>Moins d'allocations mémoire.</li>
+                        <li>Moins de travail pour le Garbage Collector.</li>
+                        <li>Meilleures performances dans les boucles intensives.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule6: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code dangereux :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">null</span><span class="operator">;</span>
+<span class="keyword">try</span> <span class="operator">{</span>
+    <span class="variable">fis</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">FileInputStream</span><span class="operator">(</span><span class="string">"file.txt"</span><span class="operator">);</span>
+<span class="operator">}</span> <span class="keyword">finally</span> <span class="operator">{</span>
+    <span class="keyword">if</span> <span class="operator">(</span><span class="variable">fis</span> <span class="operator">!=</span> <span class="keyword">null</span><span class="operator">)</span> <span class="operator">{</span>
+        <span class="variable">fis</span><span class="operator">.</span><span class="function">close</span><span class="operator">();</span>
+    <span class="operator">}</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est dangereux ?</h4>
+                    <ul style="text-align: left;">
+                        <li>Le code est plus verbeux.</li>
+                        <li>La fermeture peut être oubliée ou mal gérée.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">try</span> <span class="operator">(</span><span class="keyword">FileInputStream</span> <span class="variable">fis</span> <span class="operator">=</span>
+    <span class="keyword">new</span> <span class="function">FileInputStream</span><span class="operator">(</span><span class="string">"file.txt"</span><span class="operator">))</span> <span class="operator">{</span>
+    <span class="comment">// Lecture...</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>Fermeture automatique garantie.</li>
+                        <li>Moins de fuites de ressources.</li>
+                        <li>Code plus court et plus robuste.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule7: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Configuration par défaut :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">java</span> <span class="operator">-jar</span> <span class="string">application.jar</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li>La mémoire peut être mal dimensionnée.</li>
+                        <li>Le ramasse-miettes n'est pas forcément adapté au cas d'usage.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Configuration optimisée :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">java</span> <span class="operator">-Xms512m</span> <span class="operator">-Xmx512m</span> \
+     <span class="operator">-XX:+UseG1GC</span> \
+     <span class="operator">-XX:MaxGCPauseMillis=100</span> \
+     <span class="operator">-XX:+UseStringDeduplication</span> \
+     <span class="operator">-jar</span> <span class="string">application.jar</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>JVM mieux adaptée à l'application.</li>
+                        <li>Moins de cycles CPU gaspillés.</li>
+                        <li>Meilleur contrôle de la mémoire.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule8: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">public class</span> <span class="function">UserService</span> <span class="operator">{</span>
+    <span class="keyword">private final</span> <span class="keyword">ExpensiveResource</span> <span class="variable">resource</span> <span class="operator">=</span>
+        <span class="keyword">new</span> <span class="function">ExpensiveResource</span><span class="operator">();</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li>La ressource est créée même si elle n'est jamais utilisée.</li>
+                        <li>Le démarrage devient plus lourd.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">public class</span> <span class="function">UserService</span> <span class="operator">{</span>
+    <span class="keyword">private</span> <span class="keyword">ExpensiveResource</span> <span class="variable">resource</span><span class="operator">;</span>
+
+    <span class="keyword">public</span> <span class="keyword">ExpensiveResource</span> <span class="function">getResource</span><span class="operator">()</span> <span class="operator">{</span>
+        <span class="keyword">if</span> <span class="operator">(</span><span class="variable">resource</span> <span class="operator">==</span> <span class="keyword">null</span><span class="operator">)</span> <span class="operator">{</span>
+            <span class="variable">resource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">ExpensiveResource</span><span class="operator">();</span>
+        <span class="operator">}</span>
+        <span class="keyword">return</span> <span class="variable">resource</span><span class="operator">;</span>
+    <span class="operator">}</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>Mémoire allouée seulement si nécessaire.</li>
+                        <li>Démarrage potentiellement plus rapide.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule9: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="keyword">Connection</span> <span class="variable">conn</span> <span class="operator">=</span>
+    <span class="function">DriverManager</span><span class="operator">.</span><span class="function">getConnection</span><span class="operator">(</span><span class="variable">url</span><span class="operator">,</span> <span class="variable">user</span><span class="operator">,</span> <span class="variable">pass</span><span class="operator">);</span>
+
+<span class="comment">// Requête...</span>
+
+<span class="variable">conn</span><span class="operator">.</span><span class="function">close</span><span class="operator">();</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li>Créer une connexion à chaque requête coûte cher.</li>
+                        <li>La base, le réseau et le CPU sont davantage sollicités.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="keyword">HikariDataSource</span> <span class="variable">ds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="function">HikariDataSource</span><span class="operator">(</span><span class="variable">config</span><span class="operator">);</span>
+
+<span class="keyword">try</span> <span class="operator">(</span><span class="keyword">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> <span class="variable">ds</span><span class="operator">.</span><span class="function">getConnection</span><span class="operator">())</span> <span class="operator">{</span>
+    <span class="comment">// Requête...</span>
+<span class="operator">}</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>Connexions réutilisées.</li>
+                        <li>Moins d'allers-retours coûteux.</li>
+                        <li>Meilleures performances côté serveur.</li>
+                    </ul>
+                </div>
+            `,
+
+            rule10: `
+                <h4 style="color: var(--emergency-color); margin-top: 20px;">
+                    <i class="fas fa-times-circle"></i> Code inefficace :
+                </h4>
+
+                <div class="code-block bad">
+<pre><code><span class="variable">logger</span><span class="operator">.</span><span class="function">debug</span><span class="operator">(</span>
+    <span class="string">"User "</span> <span class="operator">+</span> <span class="variable">user</span><span class="operator">.</span><span class="function">getName</span><span class="operator">()</span> <span class="operator">+</span>
+    <span class="string">" performed action "</span> <span class="operator">+</span> <span class="variable">action</span><span class="operator">.</span><span class="function">toString</span><span class="operator">()</span>
+<span class="operator">);</span></code></pre>
+                </div>
+
+                <div class="explanation-box">
+                    <h4><i class="fas fa-info-circle"></i> Pourquoi c'est inefficace ?</h4>
+                    <ul style="text-align: left;">
+                        <li>La concaténation est faite même si le log debug est désactivé.</li>
+                        <li>Des calculs sont réalisés pour rien.</li>
+                    </ul>
+                </div>
+
+                <h4 style="color: var(--success-color); margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Code optimisé :
+                </h4>
+
+                <div class="code-block good">
+<pre><code><span class="variable">logger</span><span class="operator">.</span><span class="function">debug</span><span class="operator">(</span>
+    <span class="string">"User {} performed action {}"</span><span class="operator">,</span>
+    <span class="variable">user</span><span class="operator">.</span><span class="function">getName</span><span class="operator">(),</span>
+    <span class="variable">action</span>
+<span class="operator">);</span></code></pre>
+                </div>
+
+                <div class="gain-box">
+                    <h4><i class="fas fa-chart-line"></i> Gains :</h4>
+                    <ul style="text-align: left;">
+                        <li>Moins d'allocations String inutiles.</li>
+                        <li>Moins de calculs exécutés quand le niveau de log est inactif.</li>
+                    </ul>
+                </div>
+            `
+        };
+
+        function closeRule(rule) {
+            const content = rule.querySelector('.rule-content');
+
+            rule.classList.remove('active');
+            content.style.maxHeight = '0px';
+            content.innerHTML = '';
+            content.dataset.loaded = 'false';
+        }
+
+        function activateRule(rule, shouldScroll) {
+            const content = rule.querySelector('.rule-content');
+            const ruleId = rule.id;
+
+            document.querySelectorAll('.eco-rule.active').forEach(openRuleCard => {
+                if (openRuleCard !== rule) {
+                    closeRule(openRuleCard);
+                }
+            });
+
+            if (content.dataset.loaded !== 'true') {
+                content.innerHTML = ruleContents[ruleId] || '';
+                content.dataset.loaded = 'true';
+            }
+
+            rule.classList.add('active');
+
+            requestAnimationFrame(() => {
+                content.style.maxHeight = content.scrollHeight + 'px';
+
+                if (shouldScroll) {
+                    rule.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        }
+
+        function toggleRule(ruleId) {
+            const rule = document.getElementById(ruleId);
+
+            if (!rule) {
+                return;
+            }
+
+            if (rule.classList.contains('active')) {
+                closeRule(rule);
+            } else {
+                activateRule(rule, false);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.eco-rule.active').forEach(rule => {
+                const content = rule.querySelector('.rule-content');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+
+</html>
