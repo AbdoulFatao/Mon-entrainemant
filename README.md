@@ -44,6 +44,8 @@ Ce site est conçu à des fins pédagogiques pour soutenir l'enseignement de l'�
 
 Référez vous a la documentation, pour contribuer de manière efficiente. [Contribution projet : Eco-conception](./CONTRIBUTION.MD)
 
+Les contributions des étudiants sont documentées une par une dans le dossier [docs/contributions](./docs/contributions/) : objectif, règles d'écoconception appliquées, mesures et fichiers modifiés.
+
 Les contributions sont les bienvenues pour améliorer ce projet et enrichir son contenu. Si vous souhaitez contribuer :
 
 1. **Fork** le projet depuis GitHub.
